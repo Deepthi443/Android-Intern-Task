@@ -1,0 +1,29 @@
+plugins {
+  id("com.android.application")
+  kotlin("android")
+  kotlin("plugin.serialization") version "1.9.0" // or current
+}
+
+android {
+  compileSdk = 34
+  defaultConfig {
+    applicationId = "com.example.sampletasks"
+    minSdk = 24
+    targetSdk = 34
+  }
+  buildFeatures {
+    compose = true
+  }
+  composeOptions { kotlinCompilerExtensionVersion = "1.5.0" }
+}
+
+dependencies {
+  implementation("androidx.core:core-ktx:1.10.1")
+  implementation("androidx.activity:activity-compose:1.8.0")
+  implementation("androidx.compose.ui:ui:1.5.0")
+  implementation("androidx.compose.material:material:1.5.0")
+  implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+  implementation("io.coil-kt:coil-compose:2.4.0") // image loading
+  implementation("androidx.navigation:navigation-compose:2.7.0")
+}
