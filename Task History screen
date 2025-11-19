@@ -1,0 +1,38 @@
+@Composable
+fun TaskHistoryScreen() {
+  val context = LocalContext.current
+  val storage = remember { StorageHelper(context) }
+  var tasks by remember { mutableStateOf(storage.loadTasks()) }
+
+  val totalTasks = tasks.size
+  val totalDuration = tasks.sumOf { it.duration_sec }
+
+  Column(Modifier.fillMaxSize()) {
+    Row(Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+      Text("Total Tasks: $totalTasks")
+      Text("Total Recording Duration: ${totalDuration}s")
+    }
+    LazyColumn {
+      items(tasks) { t ->
+        Card(Modifier.fillMaxWidth().padding(8.dp)) {
+          Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+            Column(Modifier.weight(1f)) {
+              Text("ID: ${t.id.take(8)}")
+              Text("Type: ${t.task_type}")
+              Text("Duration: ${t.duration_sec}s • ${t.timestamp}")
+              when (t.task_type) {
+                "text_reading" -> Text(t.text ?: "")
+                "image_description","photo_capture" -> {
+                  val thumb = t.image_url ?: t.image_path
+                  if (!thumb.isNullOrEmpty()) {
+                    Image(painter = rememberAsyncImagePainter(thumb), contentDescription = null, modifier = Modifier.size(64.dp))
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
