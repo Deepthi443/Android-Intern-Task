@@ -1,0 +1,45 @@
+class MainActivity : ComponentActivity() {
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContent {
+      AppNavHost()
+    }
+  }
+}
+object Routes {
+  const val START = "start"
+  const val NOISE = "noise"
+  const val SELECT = "select"
+  const val TEXT_READING = "text_reading"
+  const val IMAGE_DESC = "image_desc"
+  const val PHOTO_CAPTURE = "photo_capture"
+  const val HISTORY = "history"
+}
+@Composable
+fun AppNavHost() {
+  val nav = rememberNavController()
+  NavHost(nav, startDestination = Routes.START) {
+    composable(Routes.START) { StartScreen(onStart = { nav.navigate(Routes.NOISE) }) }
+    composable(Routes.NOISE) { NoiseTestScreen(onPass = { nav.navigate(Routes.SELECT) }) }
+    composable(Routes.SELECT) {
+      TaskSelectionScreen(
+        onText = { nav.navigate(Routes.TEXT_READING) },
+        onImage = { nav.navigate(Routes.IMAGE_DESC) },
+        onPhoto = { nav.navigate(Routes.PHOTO_CAPTURE) },
+        onHistory = { nav.navigate(Routes.HISTORY) }
+      )
+    }
+    composable(Routes.TEXT_READING) {
+      TextReadingScreen(onSubmit = { /* save & popBack */ nav.popBackStack() })
+    }
+    composable(Routes.IMAGE_DESC) {
+      ImageDescriptionScreen(onSubmit = { nav.popBackStack() })
+    }
+    composable(Routes.PHOTO_CAPTURE) {
+      PhotoCaptureScreen(onSubmit = { nav.popBackStack() })
+    }
+    composable(Routes.HISTORY) {
+      TaskHistoryScreen()
+    }
+  }
+}
